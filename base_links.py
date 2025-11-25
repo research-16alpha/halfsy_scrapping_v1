@@ -1,2 +1,7 @@
+saks_base_link = "https://www.saksfifthavenue.com"
 farfetch_base_link = "https://www.farfetch.com"
 ssense_base_link = "https://www.ssense.com"
+harrods_base_link = "https://www.harrods.com"
+doversstreet_base_link = "https://shop.doverstreetmarket.com"
+bloomingdales_base_link = "https://www.bloomingdales.com"
+shop_simon_base_link = "https://shop.simon.com"

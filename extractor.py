@@ -3,9 +3,16 @@
 import json
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from schema import ssense_schema, farfetch_schema, harrods_schema, doverstreetmarket_schema, sample_sale_schema, chicmi_schema, saks_schema, bloomingdales_schema, saks_pdp_schema
+import json
+import os
+import re
+from productClassification import classify_products_bulk
+from datetime import datetime
+from zoneinfo import ZoneInfo
+from schema import *
+from custom_functions import shop_simon_trim_product_image_links
 
-def extract_with_schema(html: str, schema: dict, base_url: str = "") -> list:
+def extract_products_with_schema(html: str, schema: dict, base_url: str = "") -> list:
     """
     Schema-based HTML extractor using BeautifulSoup.
     You define selectors and data types in `schema`.
@@ -50,15 +57,85 @@ def extract_with_schema(html: str, schema: dict, base_url: str = "") -> list:
 
             item[name] = value
 
+        item = _update_discount(item)
+        item = _update_scraping_time(item)
+        
         # Include only meaningful results
         if any(v for v in item.values()):
             results.append(item)
 
+        
     return results
 
+def _update_scraping_time(product: dict):
+    ist_time = datetime.now(ZoneInfo("Asia/Kolkata"))
+    formatted_ist = ist_time.strftime("%Y-%m-%d %H:%M:%S")
+    product["scraped_at"] = formatted_ist
+    return product
 
-import json
-import os
+def _to_number(value):
+    """
+    Convert a messy price string into a float.
+    
+    Handles:
+    - Currency symbols ($, €, £, ₹, ¥, etc.)
+    - Commas
+    - Text before/after (e.g., 'USD 1,299.50', 'Price: $200')
+    - Values with no symbol
+    - Values like '€ 1 200'
+    """
+
+    if not value:
+        return None
+    
+    if not isinstance(value, str):
+        # Already numeric (int/float)
+        try:
+            return float(value)
+        except:
+            return None
+
+    # 1. Extract the FIRST number-like token using regex
+    # Supports formats:
+    # - 1,299.50
+    # - 1299,50 (European)
+    # - 1299
+    # - 1 299
+    pattern = r'[\d\.,\s]+'
+    match = re.search(pattern, value)
+    if not match:
+        return None
+
+    num_str = match.group(0)
+
+    # 2. Remove spaces
+    num_str = num_str.replace(" ", "")
+
+    # 3. If it uses comma as decimal separator (European format: "1299,50")
+    if num_str.count(",") == 1 and num_str.count(".") == 0:
+        num_str = num_str.replace(",", ".")
+
+    # 4. Remove thousand separators ","
+    num_str = num_str.replace(",", "")
+
+    # 5. Convert to float
+    try:
+        return float(num_str)
+    except:
+        return None
+
+def _update_discount(product: dict):
+    original_price = _to_number(product.get("original_price"))
+    sale_price = _to_number(product.get("sale_price"))
+
+    if not original_price or not sale_price:
+        product["discount"] = None
+        return product
+
+    discount = (original_price - sale_price) / original_price
+    product["discount"] = f"{int(discount * 100)}%"
+    return product
+
 
 def save_json(data, filename="extracted_data.json"):
     """Save structured data as a JSON file."""
@@ -67,41 +144,47 @@ def save_json(data, filename="extracted_data.json"):
     print(f"✅ Saved {len(data)} records to {filename}")
 
 def main():
-    all_products = []
-    pages = [
-        'internal_1.html'
-    ]
+    products = []
+    page = "bloomingdates.html"
 
-    for page in pages:
-        if not os.path.exists(page):
-            print(f"❌ {page} not found, skipping.")
-            continue
+    print(f"⏰Reading HTML file : {page}")
+    with open(page, "r", encoding="utf-8") as f:
+        html = f.read()
+    print(f"Successfully read HTML file😘")
 
-        with open(page, "r", encoding="utf-8") as f:
-            html = f.read()
+    try:
+        print(f"⏰Extracting products from HTML file")
+        products = extract_products_with_schema(
+            html, bloomingdales_schema,
+            base_url="https://www.bloomingdales.com"
+        )
+        print(f"Successfully Extracted {len(products)} products from HTML file😘")
+        
+        print(f"⏰Classifying products")
+        products = classify_products_bulk(products, product_key="product_name")
+        print(f"Successfully Classified {len(products)} products😘")
 
-        try:
-            products = extract_with_schema(
-                html, saks_pdp_schema,
-                base_url="https://www.saksfifthavenue.com"
-            )
-        except Exception as e:
-            print(f"⚠️ Error extracting {page}: {e}")
-            continue
+        print(f"⏰Saving products to JSON file")
+        save_json(products, filename="bloomingdales_products.json")
+        print(f"✅ Saved {len(products)} products to JSON file")
 
-        if not products:
-            print(f"⚠️ No products found in {page}")
-        else:
-            all_products.extend(products)
-            print(f"✅ Extracted {len(products)} products from {page}")
-
-    if all_products:
-        save_json(all_products, "saks_internal_page_bs4.json")    
+    except Exception as e:
+        print(f"😭 Error extracting {page}: {e}")
+    
+    if not products:
+        print(f"😭 No products found in {page}")
     else:
-        print("⚠️ No products extracted from any pages.")
-
+        print(f"✅ Extracted {len(products)} products from {page}")
 
 if __name__ == "__main__":
     main()
 
+#%%
+
+with open('Shop Simon_products.json', 'r') as f:
+    products = json.load(f)
+
+brand = "Shop Simon"
+
+prods = shop_simon_trim_product_image_links(brand=brand, products=products)
 

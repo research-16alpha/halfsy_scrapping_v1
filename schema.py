@@ -21,34 +21,23 @@ farfetch_schema = {
             "type": "text"
         },
         {
-            "name": "product_description",
+            "name": "product_name",
             "selector": "p[data-component='ProductCardDescription']",
             "type": "text"
         },
         {
-            "name": "price_original",
+            "name": "original_price",
             "selector": "p[data-component='PriceOriginal']",
             "type": "text"
         },
         {
-            "name": "price_final",
+            "name": "sale_price",
             "selector": "p[data-component='PriceFinal']",
             "type": "text"
         },
         {
             "name": "available_sizes",
             "selector": "p[data-component='ProductCardSizesAvailable']",
-            "type": "text"
-        },
-        {
-            "name": "wishlist_state",
-            "selector": "button[data-component='WishlistButtonControlled']",
-            "type": "attribute",
-            "attribute": "aria-pressed"
-        },
-        {
-            "name": "disc_pct",
-            "selector" : "p[data-component='PriceDiscount']",
             "type": "text"
         }
     ]
@@ -81,14 +70,19 @@ ssense_schema = {
             "type": "text"
         },
         {
-            "name": "product_price",
+            "name": "original_price",
+            "selector": "span[data-test^='productFormerPrice']",
+            "type": "text"
+        },
+        {
+            "name": "sale_price",
             "selector": "span[data-test^='productCurrentPrice']",
             "type": "text"
         },
         {
-            "name": "product_json_ld",
-            "selector": "script[type='application/ld+json']",
-            "type": "json"
+            "name": "available_sizes",
+            "selector": "",
+            "type": "text",
         }
     ]
 }
@@ -115,28 +109,169 @@ harrods_schema = {
             "type": "text"
         },
         {
-            "name": "product_description",
+            "name": "product_name",
             "selector": "p[data-test-id='product-card-product-name']",
             "type": "text"
         },
         {
-            "name": "price_original",
+            "name": "original_price",
             "selector": "span[data-test-id='initialProductPrice']",
             "type": "text"
         },
         {
-            "name": "price_final",
+            "name": "sale_price",
             "selector": "span.text-harrods-red",
             "type": "text"
         },
         {
-            "name": "wishlist_state",
-            "selector": "button[data-test-id='add-item-to-wishlist-button']",
-            "type": "attribute",
-            "attribute": "aria-label"
+            "name": "available_sizes",
+            "selector": "",
+            "type": "text",
         }
     ]
 }
+
+saks_schema = {
+    "name": "Saks Fifth Avenue Products",
+    "baseSelector": "div.product-tile",
+    "fields": [
+        {
+            "name": "product_link",
+            "selector": "a.thumb-link",
+            "type": "attribute",
+            "attribute": "href"
+        },
+        {
+            "name": "product_image_link",
+            "selector": "picture.tile-image img",
+            "type": "attribute",
+            "attribute": "src"
+        },
+        {
+            "name": "brand_name",
+            "selector": "h2 a.product-brand",
+            "type": "text"
+        },
+        {
+            "name": "product_name",
+            "selector": "h3.pdp-link a.link",
+            "type": "text"
+        },
+        {
+            "name": "price_original",
+            "selector": "span.list .formatted_price.bfx-list-price",
+            "type": "text"
+        },
+        {
+            "name": "price_final",
+            "selector": "span.sales .formatted_sale_price",
+            "type": "text"
+        },
+        {
+            "name": "price_range_min",
+            "selector": "span.range span.sales .formatted_sale_price:first-of-type",
+            "type": "text"
+        },
+        {
+            "name": "price_range_max",
+            "selector": "span.range span.sales .formatted_sale_price:last-of-type",
+            "type": "text"
+        },
+        {
+            "name": "product_id",
+            "selector": "input.tileproduct-detail",
+            "type": "attribute",
+            "attribute": "data-pid"
+        },
+        {
+            "name": "product_sku",
+            "selector": "input.tileproduct-atm-code",
+            "type": "attribute",
+            "attribute": "data-atm-code"
+        },
+        {
+            "name": "brand_hidden",
+            "selector": "input.tileproduct-brandname",
+            "type": "attribute",
+            "attribute": "data-brandname"
+        },
+        {
+            "name": "color_variants",
+            "selector": "a.colorswatch.tile-swatch",
+            "type": "attribute_list",
+            "attribute": "data-attr-value"
+        },
+        {
+            "name": "color_hex_values",
+            "selector": "span.swatch.swatch-circle",
+            "type": "attribute_list",
+            "attribute": "style"
+        },
+        {
+            "name": "is_on_sale",
+            "selector": "span.list.strike-through",
+            "type": "exists"
+        },
+        {
+            "name": "add_to_bag_link",
+            "selector": "button.ajax-update-atc-button",
+            "type": "attribute",
+            "attribute": "data-href"
+        },
+        {
+            "name": "wishlist_link",
+            "selector": "button.wishlistTile",
+            "type": "attribute",
+            "attribute": "href"
+        }
+    ]
+}
+
+bloomingdales_schema = {
+    "name": "Bloomingdales Products",
+    "baseSelector": "li.cell.sortablegrid-product",
+    "fields": [
+        {
+            "name": "product_link",
+            "selector": "a[title]",
+            "type": "attribute",
+            "attribute": "href"
+        },
+        {
+            "name": "product_image",
+            "selector": ".picture-container img",
+            "type": "attribute",
+            "attribute": "data-src"
+        },
+        {
+            "name": "brand_name",
+            "selector": ".product-brand",
+            "type": "text"
+        },
+        {
+            "name": "product_name",
+            "selector": ".product-name",
+            "type": "text"
+        },
+        {
+            "name": "original_price",
+            "selector": ".price-strike",
+            "type": "text"
+        },
+        {
+            "name": "sale_price",
+            "selector": ".show-percent-off .discount",
+            "type": "text"
+        },
+        {
+            "name": "available_sizes",
+            "selector": "",
+            "type": "text",
+        }
+    ]
+}
+
+
 
 doverstreetmarket_schema = {
     "name": "Dover Street Market Products",
@@ -318,348 +453,46 @@ chicmi_schema = {
     ]
 }
 
-saks_schema = {
-    "name": "Saks Fifth Avenue Products",
-    "baseSelector": "div.product-tile",
+shop_simon_schema = {
+    "name": "Shop Simon Products",
+    "baseSelector": "div.product-container div.product-item",
     "fields": [
         {
             "name": "product_link",
-            "selector": "a.thumb-link",
+            "selector": "a.grid-product__link",
             "type": "attribute",
             "attribute": "href"
         },
         {
-            "name": "product_image_link",
-            "selector": "picture.tile-image img",
+            "name": "product_image",
+            "selector": ".grid-product__image",
             "type": "attribute",
-            "attribute": "src"
-        },
-        {
-            "name": "brand_name",
-            "selector": "h2 a.product-brand",
-            "type": "text"
-        },
-        {
-            "name": "product_name",
-            "selector": "h3.pdp-link a.link",
-            "type": "text"
-        },
-        {
-            "name": "price_original",
-            "selector": "span.list .formatted_price.bfx-list-price",
-            "type": "text"
-        },
-        {
-            "name": "price_final",
-            "selector": "span.sales .formatted_sale_price",
-            "type": "text"
-        },
-        {
-            "name": "price_range_min",
-            "selector": "span.range span.sales .formatted_sale_price:first-of-type",
-            "type": "text"
-        },
-        {
-            "name": "price_range_max",
-            "selector": "span.range span.sales .formatted_sale_price:last-of-type",
-            "type": "text"
-        },
-        {
-            "name": "product_id",
-            "selector": "input.tileproduct-detail",
-            "type": "attribute",
-            "attribute": "data-pid"
-        },
-        {
-            "name": "product_sku",
-            "selector": "input.tileproduct-atm-code",
-            "type": "attribute",
-            "attribute": "data-atm-code"
-        },
-        {
-            "name": "brand_hidden",
-            "selector": "input.tileproduct-brandname",
-            "type": "attribute",
-            "attribute": "data-brandname"
-        },
-        {
-            "name": "color_variants",
-            "selector": "a.colorswatch.tile-swatch",
-            "type": "attribute_list",
-            "attribute": "data-attr-value"
-        },
-        {
-            "name": "color_hex_values",
-            "selector": "span.swatch.swatch-circle",
-            "type": "attribute_list",
             "attribute": "style"
         },
         {
-            "name": "is_on_sale",
-            "selector": "span.list.strike-through",
-            "type": "exists"
-        },
-        {
-            "name": "add_to_bag_link",
-            "selector": "button.ajax-update-atc-button",
-            "type": "attribute",
-            "attribute": "data-href"
-        },
-        {
-            "name": "wishlist_link",
-            "selector": "button.wishlistTile",
-            "type": "attribute",
-            "attribute": "href"
-        }
-    ]
-}
-
-bloomingdales_schema = {
-    "name": "Bloomingdale's Products",
-    "baseSelector": "li.cell.sortablegrid-product",
-    "fields": [
-        {
-            "name": "product_link",
-            "selector": "a[title]",
-            "type": "attribute",
-            "attribute": "href"
-        },
-        {
-            "name": "product_title",
-            "selector": "a[title]",
-            "type": "attribute",
-            "attribute": "title"
-        },
-        {
             "name": "brand_name",
-            "selector": "div.product-brand",
+            "selector": ".brandName",
             "type": "text"
         },
         {
             "name": "product_name",
-            "selector": "h3.product-name",
+            "selector": ".grid-product__title",
             "type": "text"
         },
         {
-            "name": "product_image_primary",
-            "selector": "li.slideshow-item.active img.picture-image",
-            "type": "attribute",
-            "attribute": "data-src"
-        },
-        {
-            "name": "product_image_all",
-            "selector": "li.slideshow-item img.picture-image",
-            "type": "attribute_list",
-            "attribute": "data-src"
-        },
-        {
-            "name": "price_original",
-            "selector": "span.price-strike",
+            "name": "sale_price",
+            "selector": ".grid-product__price b",
             "type": "text"
         },
         {
-            "name": "price_final",
-            "selector": "span.discount.price-reg",
+            "name": "original_price",
+            "selector": ".grid-product__price .grid-product__price--original",
             "type": "text"
         },
         {
-            "name": "discount_percent",
-            "selector": "span.discount:not(.price-reg)",
-            "type": "text"
-        },
-        {
-            "name": "rating_value",
-            "selector": "span.review-star-wrapper",
-            "type": "attribute",
-            "attribute": "aria-label"
-        },
-        {
-            "name": "rating_count",
-            "selector": "span.rating-description span",
-            "type": "text"
-        },
-        {
-            "name": "badge_labels",
-            "selector": "div.badge-text",
-            "type": "text_list"
-        },
-        {
-            "name": "quick_shop_button",
-            "selector": "button[data-testid='quick-shop']",
-            "type": "attribute",
-            "attribute": "aria-label"
-        },
-        {
-            "name": "product_id",
-            "selector": "div[id^='product-thumbnail-']",
-            "type": "attribute",
-            "attribute": "id"
-        }
-    ]
-}
-
-
-saks_pdp_schema = {
-    "name": "Saks Fifth Avenue Product Page",
-    "baseSelector": "div.product-view__gallery-and-body",
-    "fields": [
-        # --- Basic Product Info ---
-        {
-            "name": "product_title",
-            "selector": "h1[data-testid='pdp.body.desktop.header.titleAndSubtitle.subtitle']",
-            "type": "text"
-        },
-        {
-            "name": "brand_name",
-            "selector": "h2.cxds-titleBrand",
-            "type": "text"
-        },
-        {
-            "name": "product_url",
-            "selector": "script[data-id='richResultsProductView']",
-            "type": "json_extract",
-            "json_key": "offers.url"
-        },
-        {
-            "name": "product_id",
-            "selector": "span[data-testid='pdp.body.desktop.details.styleCode.styleCode_STYLE_CODE_ID']",
-            "type": "text"
-        },
-        {
-            "name": "sku",
-            "selector": "script[data-id='richResultsProductView']",
-            "type": "json_extract",
-            "json_key": "sku"
-        },
-        {
-            "name": "mpn",
-            "selector": "script[data-id='richResultsProductView']",
-            "type": "json_extract",
-            "json_key": "mpn"
-        },
-        {
-            "name": "gtin13",
-            "selector": "script[data-id='richResultsProductView']",
-            "type": "json_extract",
-            "json_key": "gtin13"
-        },
-
-        # --- Pricing ---
-        {
-            "name": "price_current",
-            "selector": "span[data-testid='pricing.displayPrice.currentPrice']",
-            "type": "text"
-        },
-        {
-            "name": "price_original",
-            "selector": "span[data-testid='pricing.displayPrice.strikethroughPrice']",
-            "type": "text"
-        },
-        {
-            "name": "price_currency",
-            "selector": "script[data-id='richResultsProductView']",
-            "type": "json_extract",
-            "json_key": "offers.priceCurrency"
-        },
-        {
-            "name": "price_numeric",
-            "selector": "script[data-id='richResultsProductView']",
-            "type": "json_extract",
-            "json_key": "offers.price"
-        },
-        {
-            "name": "discount_offer",
-            "selector": "span[data-testid='offer.title']",
-            "type": "text"
-        },
-
-        # --- Media ---
-        {
-            "name": "image_primary",
-            "selector": "section.product-view__gallery button.product-image:first-of-type img",
-            "type": "attribute",
-            "attribute": "src"
-        },
-        {
-            "name": "image_gallery",
-            "selector": "section.product-view__gallery button.product-image img",
-            "type": "attribute_list",
-            "attribute": "src"
-        },
-        {
-            "name": "image_gallery_json",
-            "selector": "script[data-id='richResultsProductView']",
-            "type": "json_extract_list",
-            "json_key": "image"
-        },
-
-        # --- Description & Details ---
-        {
-            "name": "product_description",
-            "selector": "span[data-testid='pdp.body.desktop.details.detailsText_0']",
-            "type": "text"
-        },
-        {
-            "name": "product_highlights",
-            "selector": "ul[data-testid^='pdp.body.desktop.details.list_'] li",
-            "type": "text_list"
-        },
-        {
-            "name": "fit_note",
-            "selector": "span[data-testid='pdp.body.desktop.details.detailsText_2']",
-            "type": "text"
-        },
-        {
-            "name": "style_code_label",
-            "selector": "span[data-testid='pdp.body.desktop.details.styleCode.styleCode_STYLE_CODE']",
-            "type": "text"
-        },
-
-        # --- Variants & Attributes ---
-        {
-            "name": "color_selected",
-            "selector": "span[data-testid='selectionsContainer.colors.header.selected']",
-            "type": "text"
-        },
-        {
-            "name": "size_selected",
-            "selector": "span[data-testid='selectionsContainer.size.selected+callout.selected']",
-            "type": "text"
-        },
-        {
-            "name": "stock_status",
-            "selector": "span[data-testid='cta.bagMessages.inventoryMessage']",
-            "type": "text"
-        },
-        {
-            "name": "return_policy_note",
-            "selector": "span[data-testid='cta.bagMessages.finalSaleCtaMessage.finalSaleMessage']",
-            "type": "text"
-        },
-
-        # --- Shipping & Promotions ---
-        {
-            "name": "shipping_offer",
-            "selector": "span[data-testid='pdp.body.desktop.delivery.title']",
-            "type": "text"
-        },
-        {
-            "name": "loyalty_offer",
-            "selector": "span[data-testid='pdp.body.desktop.loyalty-saks+-container.loyalty-saks+.title']",
-            "type": "text"
-        },
-
-        # --- CTAs ---
-        {
-            "name": "wishlist_button_label",
-            "selector": "button[data-testid='wishlistButton']",
-            "type": "attribute",
-            "attribute": "aria-label"
-        },
-        {
-            "name": "add_to_bag_label",
-            "selector": "button[data-testid='cta.addToBagButton'] span",
-            "type": "text"
+            "name": "available_sizes",
+            "selector": "",
+            "type": "text",
         }
     ]
 }
